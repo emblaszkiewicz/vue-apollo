@@ -1,17 +1,18 @@
 <script setup lang="ts">
+import type { TBook, TFilterBooks } from "@/types/types";
 import { ref, watch } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import { pagination } from "@/services/services";
 
-const limitPerPage = ref(100);
-const page = ref(1);
-const bookAuthor = ref("");
-const bookTitle = ref("");
-const bookDesc = ref("");
-const genre = ref(null);
-const sort = ref(null);
-const books = ref();
-const { result, loading, error } = useQuery(pagination(), {
+const limitPerPage = ref<number>(100);
+const page = ref<number>(1);
+const bookAuthor = ref<string>("");
+const bookTitle = ref<string>("");
+const bookDesc = ref<string>("");
+const genre = ref<string | null>(null);
+const sort = ref<string | null>(null);
+const books = ref<TBook[]>();
+const { result, loading, error } = useQuery<TFilterBooks<TBook>>(pagination(), {
   limitPerPage,
   page,
   bookAuthor,
@@ -20,14 +21,14 @@ const { result, loading, error } = useQuery(pagination(), {
   genre,
   sort,
 });
-watch(result, () => (books.value = result.value.filterBooks.books));
+watch(result, () => (books.value = result.value?.filterBooks?.books));
 </script>
 
 <template>
   <h1>Query</h1>
   <section v-if="error">Error...</section>
   <section v-if="loading">Loading...</section>
-  <section v-else class="section">
+  <section v-if="books" class="section">
     <article class="options">
       <form class="form">
         <label>Limit per page</label>
@@ -63,7 +64,7 @@ watch(result, () => (books.value = result.value.filterBooks.books));
       >
     </article>
     <div class="wrapper">
-      <article class="article" v-for="book in books" :key="book.id">
+      <article class="article" v-for="(book, index) in books" :key="index">
         <span>Author: {{ book.bookAuthor }}</span>
         <span>Title: {{ book.bookTitle }}</span>
         <span>Desc: {{ book.bookDesc }}</span>
