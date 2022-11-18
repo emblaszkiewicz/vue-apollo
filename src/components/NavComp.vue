@@ -26,7 +26,6 @@ onMounted(() => {
   <nav class="navi">
     <router-link class="link" to="/">Home</router-link>
     <router-link class="link" to="/query">Query</router-link>
-    <router-link class="link" to="/pagination">Pagination</router-link>
     <router-link class="link" to="/mutation">Mutation</router-link>
     <a v-if="user" @click="user.value = null" class="link" href="http://localhost:4000/auth/logout">Logout</a>
     <a v-else class="link" href="http://localhost:4000/auth/google"

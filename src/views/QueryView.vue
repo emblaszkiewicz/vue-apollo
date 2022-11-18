@@ -1,33 +1,103 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useQuery } from "@vue/apollo-composable";
-import { getAllBooks } from "@/services/services";
+import { pagination } from "@/services/services";
 
-const { result, loading, error } = useQuery(getAllBooks);
+const limitPerPage = ref(100);
+const page = ref(1);
+const bookAuthor = ref("");
+const bookTitle = ref("");
+const bookDesc = ref("");
+const genre = ref(null);
+const sort = ref(null);
 const books = ref();
+const { result, loading, error } = useQuery(pagination(), {
+  limitPerPage,
+  page,
+  bookAuthor,
+  bookTitle,
+  bookDesc,
+  genre,
+  sort,
+});
 watch(result, () => (books.value = result.value.filterBooks.books));
 </script>
 
 <template>
-  <h2>Query View</h2>
+  <h1>Query</h1>
   <section v-if="error">Error...</section>
   <section v-if="loading">Loading...</section>
   <section v-else class="section">
-    <article class="article" v-for="book in books" :key="book.id">
-      <span>Author: {{ book.bookAuthor }}</span>
-      <span>Title: {{ book.bookTitle }}</span>
-      <span>Desc: {{ book.bookDesc }}</span>
-      <span>Genre: {{ book.genre }}</span>
+    <article class="options">
+      <form class="form">
+        <label>Limit per page</label>
+        <input v-model.lazy.number="limitPerPage" />
+        <label>Find author</label>
+        <input v-model.lazy="bookAuthor" />
+        <label>Find title</label>
+        <input v-model.lazy="bookTitle" />
+        <label>Find description</label>
+        <input v-model.lazy="bookDesc" />
+        <label>Find genre</label>
+        <select v-model="genre">
+          <option :value="null">None</option>
+          <option>Fiction</option>
+          <option>Thriller</option>
+          <option>Drama</option>
+        </select>
+        <label>Sort</label>
+        <select v-model="sort">
+          <option :value="null">None</option>
+          <option>AuthorAlphabetically</option>
+          <option>TitleAlphabetically</option>
+        </select>
+      </form>
     </article>
+    <article class="pages">
+      <span
+        v-for="item in result.filterBooks.totalPages"
+        :key="item"
+        @click="page = item"
+        class="page"
+        >{{ item }}</span
+      >
+    </article>
+    <div class="wrapper">
+      <article class="article" v-for="book in books" :key="book.id">
+        <span>Author: {{ book.bookAuthor }}</span>
+        <span>Title: {{ book.bookTitle }}</span>
+        <span>Desc: {{ book.bookDesc }}</span>
+        <span>Genre: {{ book.genre }}</span>
+      </article>
+    </div>
   </section>
 </template>
 
 <style scoped>
 .section {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 200px;
+}
+.pages {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.page {
+  cursor: pointer;
+}
+.wrapper {
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 40px;
+  gap: 20px;
 }
 .article {
   width: 300px;
