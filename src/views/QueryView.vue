@@ -3,14 +3,16 @@ import { ref, watch } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import { getAllBooks } from "@/services/services";
 
-const { result } = useQuery(getAllBooks);
-const books = ref(null);
+const { result, loading, error } = useQuery(getAllBooks);
+const books = ref();
 watch(result, () => (books.value = result.value.filterBooks.books));
 </script>
 
 <template>
   <h2>Query View</h2>
-  <section class="section" v-if="books">
+  <section v-if="error">Error...</section>
+  <section v-if="loading">Loading...</section>
+  <section v-else class="section">
     <article class="article" v-for="book in books" :key="book.id">
       <span>Author: {{ book.bookAuthor }}</span>
       <span>Title: {{ book.bookTitle }}</span>

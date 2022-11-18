@@ -13,6 +13,21 @@ export const getAllBooks = () => gql`
   }
 `;
 
+export const pagination = () => gql`
+  query FilterBooks($limitPerPage: Int, $page: Int) {
+    filterBooks(limitPerPage: $limitPerPage, page: $page) {
+      books {
+        bookAuthor
+        bookDesc
+        bookTitle
+        genre
+      }
+      page
+      totalPages
+    }
+  }
+`;
+
 export const addBook = () => gql`
   mutation Mutation(
     $bookAuthor: String
