@@ -64,3 +64,14 @@ export const addBook = () => gql`
     }
   }
 `;
+
+export const sub = () => gql`
+  subscription Subscription($genre: TGenres) {
+    filterBookAdded(genre: $genre) {
+      bookAuthor
+      bookDesc
+      bookTitle
+      genre
+    }
+  }
+`;
