@@ -26,7 +26,11 @@ const handleAdd = () =>
     <label>Book title</label>
     <input class="input" v-model="bookTitle" placeholder="Enter title..." />
     <label>Book description</label>
-    <input class="input" v-model="bookDesc" placeholder="Enter description..." />
+    <input
+      class="input"
+      v-model="bookDesc"
+      placeholder="Enter description..."
+    />
     <label>Genre</label>
     <select class="select" v-model="genre">
       <option>Fiction</option>

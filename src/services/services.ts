@@ -65,9 +65,9 @@ export const addBook = () => gql`
   }
 `;
 
-export const sub = () => gql`
-  subscription Subscription($genre: TGenres) {
-    filterBookAdded(genre: $genre) {
+export const sub = gql`
+  subscription Subscription {
+    bookAdded {
       bookAuthor
       bookDesc
       bookTitle

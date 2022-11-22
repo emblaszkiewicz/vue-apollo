@@ -1,20 +1,10 @@
 <script setup lang="ts">
-import gql from "graphql-tag";
 import { useSubscription } from "@vue/apollo-composable";
-//import { sub } from "@/services/services";
-import { watch, ref } from "vue";
+import { sub } from "@/services/services";
+import { watch } from "vue";
 
-const { result } = useSubscription(gql`
-  subscription Subscription {
-    bookAdded {
-      bookAuthor
-      bookDesc
-      bookTitle
-      genre
-    }
-  }
-`);
-watch(result, (data) => console.log("New book!", data));
+const { result, loading, error } = useSubscription(sub);
+watch(result, () => console.log(result));
 </script>
 
 <template>
